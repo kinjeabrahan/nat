@@ -167,6 +167,73 @@ class BaselineTests(NatCase):
         self.assertIn("Uso: nat archivo.nat", result.stderr)
 
 
+class SemanticTests(NatCase):
+    def test_unknown_identifier(self):
+        self.assert_error('imprimir nombr\n', 'Variable no definida: nombr.')
+
+    def test_unknown_assignment_source(self):
+        self.assert_error('nombre = nombr\n', 'Variable no definida: nombr.')
+
+    def test_unknown_condition_operand(self):
+        self.assert_error('si nombr == "x":\n    imprimir "no"\n', 'Variable no definida: nombr.')
+
+    def test_reserved_destinations(self):
+        for name in ('si','mientras','imprimir','verdadero','falso','y','o','no','func','retornar','leer','sino'):
+            with self.subTest(name=name):
+                self.assert_error(name+' = "x"\n', 'palabra reservada')
+
+    def test_keyword_prefix_identifiers(self):
+        self.assert_success('imprimirx = "bien"\nsino_otro = imprimirx\nimprimir sino_otro\n', 'bien\n')
+
+    def test_keyword_separator_tab(self):
+        self.assert_success('si\t"a" == "a":\n    imprimir\t"bien"\n', 'bien\n')
+
+    def test_comparison_is_not_assignment(self):
+        for op in ('==','!='):
+            with self.subTest(op=op):
+                self.assert_error('a'+op+'b\n', 'Una comparacion no es una asignacion')
+
+    def test_invalid_strings(self):
+        for value in ('"Nat', '"a" "b"', '"a"b"', '"a" basura', '"a\\q"', '"a\\'):
+            with self.subTest(value=value):
+                result=self.run_source('imprimir '+value+'\n')
+                self.assertEqual(result.returncode,1)
+                self.assertIn('main.nat:1:', result.stderr)
+                self.assertEqual(result.stdout,'')
+                self.assertNotIn('Sanitizer', result.stderr)
+
+    def test_escape_contents(self):
+        self.assert_success('imprimir "a\\nb\\tc\\\"d\\\\e#"\n', 'a\nb\tc"d\\e#\n')
+
+    def test_no_text_fallback(self):
+        for value in ('1 + 2','123abc','hola mundo'):
+            with self.subTest(value=value):
+                self.assert_error('imprimir '+value+'\n', 'Expresion no valida')
+
+    def test_scalar_compatibility(self):
+        self.assert_success('a = -12\nimprimir a\nimprimir verdadero\nimprimir falso\n', '-12\nverdadero\nfalso\n')
+
+    def test_extra_indent(self):
+        self.assert_error('si "a" == "a":\n    a = "x"\n        imprimir a\n', 'Indentacion inesperada', line=3)
+
+    def test_bad_dedent(self):
+        self.assert_error('si "a" == "a":\n    a = "x"\n  imprimir a\n', 'cuatro espacios', line=3)
+
+    def test_lexical_error_in_dead_branch(self):
+        self.assert_error('si "a" != "a":\n    imprimir "sin cerrar\n', 'Cadena sin cerrar.', line=2)
+
+    def test_empty_and_malformed_paths(self):
+        self.assert_error('leer ""\n', 'ruta no puede estar vacia')
+        self.assert_error('leer "a" "b"\n', 'Sintaxis correcta')
+        self.assert_error('leer "a\\nb"\n', 'ruta no puede contener')
+
+    def test_long_line_and_empty_path_cli(self):
+        self.assert_error('imprimir "'+'x'*256+'"\n', 'Cadena demasiado larga')
+        result = subprocess.run([str(NAT), ''], capture_output=True, text=True, timeout=5)
+        self.assertEqual(result.returncode,1)
+        self.assertIn('ruta no puede estar vacia',result.stderr)
+
+
 class ArgumentLimitTests(NatCase):
     def test_third_literal_argument(self):
         self.assert_error('imprimir buscar("Nat", "a", "extra")\n', "Demasiados argumentos.")
@@ -204,7 +271,7 @@ if __name__ == "__main__":
     if not NAT.is_file():
         parser.error(f"Compile Nat first: {NAT}")
     groups = {"baseline": [BaselineTests], "regression": [ArgumentLimitTests],
-              "all": [BaselineTests, ArgumentLimitTests]}
+              "all": [BaselineTests, ArgumentLimitTests, SemanticTests]}
     suite = unittest.TestSuite(unittest.defaultTestLoader.loadTestsFromTestCase(cls)
                                for cls in groups[args.group])
     raise SystemExit(not unittest.TextTestRunner(verbosity=2).run(suite).wasSuccessful())

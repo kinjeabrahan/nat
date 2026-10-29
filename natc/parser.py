@@ -58,6 +58,8 @@ class Parser:
         nodes = []
         while self.peek().kind not in ('EOF', 'DEDENT'):
             t = self.take('NAME')
+            if t.text in RESERVED and self.peek().kind == '=':
+                raise Error(t, 'No puedes asignar a una palabra reservada.')
             if t.text in ('si', 'mientras'):
                 condition = self.expr()
                 self.take(':'); self.take('NEWLINE'); self.take('INDENT')

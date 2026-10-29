@@ -1,6 +1,10 @@
 # Nat
 
-Dos rutas independientes, conservadas durante la transición:
+La base principal es el compilador `natc/`. El intérprete C queda como
+compatibilidad explícita, sin ampliar su lenguaje. No son dos implementaciones
+equivalentes: la transición y sus diferencias se documentan por separado.
+
+Dos rutas disponibles:
 
 - Intérprete de compatibilidad en C: `make`, `./build/nat pruebas/interprete.nat`.
 - Compilador AOT experimental: `python3 -m natc build examples/compiled/suma.nat -o build/suma`, después `./build/suma 100`.
@@ -22,7 +26,9 @@ capacidades ya disponibles. El compilador solo implementa el subconjunto de
 la entrega 2; los programas anteriores siguen usando el intérprete de C.
 
 Trabajo local basado en `kinjeabrahan/nat`, commit
-`0ef1d60775ed96ac6901049092d26a125b9ccc5e`. No se han creado commits ni cambios
-remotos. `nat.exe` original permanece fuera de esta copia de fuentes, sin cambios
+`fd64d424e604eec93ef2bf0f6cc235d76ffbb210`. Las dos entregas previas ya están integradas en ese commit remoto.
+Esta tercera mejora sigue local y no ha creado commits ni cambios remotos. `nat.exe` original permanece fuera de esta copia de fuentes, sin cambios
 propuestos sobre ese archivo. LeakSanitizer no funciona en este contenedor;
 la opción mostrada desactiva solo fugas, conservando ASan y UBSan.
+
+[Entrega 3: corrección semántica y compatibilidad](docs/ENTREGA3.md).

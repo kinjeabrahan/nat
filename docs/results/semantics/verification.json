@@ -1,0 +1,10 @@
+{
+  "base_commit": "fd64d424e604eec93ef2bf0f6cc235d76ffbb210",
+  "remote_message": "nat V1.0",
+  "legacy_tests": 57,
+  "compiler_tests": 19,
+  "legacy_sanitized_tests": 57,
+  "gcc_analyzer_exit": 0,
+  "leak_detection": "not validated",
+  "remote_mutations": []
+}

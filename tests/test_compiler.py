@@ -63,6 +63,12 @@ class CompilerTests(unittest.TestCase):
         self.good((ROOT/'examples/compiled/suma.nat').read_text(),'4950\nverdadero\nNat compilado\n',arguments=[100])
     def test_short_circuit(self):
         self.good('imprimir falso y (1 % 0 == 1)\nimprimir verdadero o (1 % 0 == 1)\nimprimir no falso\n','falso\nverdadero\nverdadero\n')
+    def test_reserved_destinations(self):
+        from natc.parser import RESERVED
+        for name in RESERVED:
+            with self.subTest(name=name):
+                self.bad(name + ' = 1\n', 'palabra reservada')
+
     def test_type_errors(self):
         for source in ['a = 1\na = "x"\n','imprimir 1 + verdadero\n','imprimir 1 == "1"\n','si 1:\n    imprimir 1\n']:
             with self.subTest(source=source):

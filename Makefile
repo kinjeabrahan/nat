@@ -13,10 +13,10 @@ all: build/nat
 build:
 	mkdir -p build
 
-build/nat: nat.c | build
+build/nat: nat.c legacy_lex.h | build
 	$(CC) $(CFLAGS) $< -o $@
 
-build/nat-sanitize: nat.c | build
+build/nat-sanitize: nat.c legacy_lex.h | build
 	$(CC) $(SAN_CFLAGS) $(SAN_NO_PIE) $< -o $@
 
 test: build/nat

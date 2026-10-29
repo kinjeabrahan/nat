@@ -1,0 +1,18 @@
+{
+  "command": [
+    "gcc",
+    "-std=c11",
+    "-Wall",
+    "-Wextra",
+    "-Wpedantic",
+    "-Werror",
+    "-fanalyzer",
+    "-c",
+    "nat.c",
+    "-o",
+    "build/nat-analyzer.o"
+  ],
+  "returncode": 0,
+  "stdout": "",
+  "stderr": ""
+}

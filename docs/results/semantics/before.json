@@ -1,0 +1,44 @@
+{
+  "undefined": {
+    "source": "imprimir nombr\n",
+    "status": 0,
+    "stdout": "nombr\n",
+    "stderr": ""
+  },
+  "unclosed": {
+    "source": "imprimir \"Nat\n",
+    "status": 0,
+    "stdout": "\"Nat\n",
+    "stderr": ""
+  },
+  "adjacent": {
+    "source": "imprimir \"a\" \"b\"\n",
+    "status": 0,
+    "stdout": "a\" \"b\n",
+    "stderr": ""
+  },
+  "reserved": {
+    "source": "si = \"x\"\n",
+    "status": 1,
+    "stdout": "",
+    "stderr": "[Nat 0.3.0] /workspace/scratch/a51f98983aed/before3-reserved.nat:1: Falta ':' en el bloque.\n"
+  },
+  "comparison": {
+    "source": "a==b\n",
+    "status": 1,
+    "stdout": "",
+    "stderr": "[Nat 0.3.0] /workspace/scratch/a51f98983aed/before3-comparison.nat:1: Nombre de variable no valido.\n"
+  },
+  "prefix": {
+    "source": "imprimirx = \"bien\"\nimprimir imprimirx\n",
+    "status": 0,
+    "stdout": "bien\n",
+    "stderr": ""
+  },
+  "indent": {
+    "source": "si \"a\" == \"a\":\n    imprimir \"a\"\n        imprimir \"b\"\n",
+    "status": 0,
+    "stdout": "a\nb\n",
+    "stderr": ""
+  }
+}
