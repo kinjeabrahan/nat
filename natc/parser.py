@@ -44,8 +44,14 @@ class Parser:
         elif t.kind == 'NAME' and t.text not in RESERVED:
             if self.peek().kind == '(':
                 self.take('(')
+                arguments = []
+                if self.peek().kind != ')':
+                    while True:
+                        arguments.append(self.expr())
+                        if self.peek().kind != ',': break
+                        self.take(',')
                 self.take(')')
-                node = Node('call', t, value=t.text)
+                node = Node('call', t, arguments, value=t.text)
             else:
                 node = Node('name', t, value=t.text)
         else:
@@ -54,18 +60,45 @@ class Parser:
             op = self.take()
             node = Node(op.text, op, [node, self.expr(PRECEDENCE[op.text]+1)])
         return node
+    def suite(self):
+        self.take(':'); self.take('NEWLINE'); self.take('INDENT')
+        body = self.block(True)
+        self.take('DEDENT')
+        return body
+
+    def identifier(self):
+        token = self.take('NAME')
+        if token.text in RESERVED:
+            raise Error(token, 'No puedes usar una palabra reservada como nombre.')
+        return token
+
     def block(self, nested=False):
         nodes = []
         while self.peek().kind not in ('EOF', 'DEDENT'):
             t = self.take('NAME')
-            if t.text in ('si', 'mientras'):
-                condition = self.expr()
-                self.take(':'); self.take('NEWLINE'); self.take('INDENT')
-                body = self.block(True)
-                self.take('DEDENT')
-                nodes.append(Node(t.text, t, [condition, body]))
-            elif t.text == 'imprimir':
-                nodes.append(Node('print', t, [self.expr()]))
+            if t.text in RESERVED and self.peek().kind == '=':
+                raise Error(t, 'No puedes asignar a una palabra reservada.')
+            if t.text == 'func':
+                if nested: raise Error(t, 'Las funciones deben declararse a nivel de modulo.')
+                name = self.identifier(); self.take('(')
+                params = []
+                if self.peek().kind != ')':
+                    while True:
+                        param = self.identifier(); self.take(':'); typ = self.take('NAME')
+                        params.append((param, typ.text))
+                        if self.peek().kind != ',': break
+                        self.take(',')
+                self.take(')'); self.take('->'); result = self.take('NAME')
+                nodes.append(Node('function', name, [self.suite()],
+                                  {'params':params, 'return_type':result.text}))
+            elif t.text in ('si', 'mientras'):
+                condition = self.expr(); body = self.suite()
+                parts = [condition, body]
+                if t.text == 'si' and self.peek().text == 'sino':
+                    self.take('NAME'); parts.append(self.suite())
+                nodes.append(Node(t.text, t, parts))
+            elif t.text in ('imprimir', 'retornar'):
+                nodes.append(Node('print' if t.text == 'imprimir' else 'return', t, [self.expr()]))
                 self.take('NEWLINE')
             elif t.text not in RESERVED:
                 self.take('=')
@@ -73,9 +106,9 @@ class Parser:
                 self.take('NEWLINE')
             else:
                 raise Error(t, 'Instruccion aun no soportada por natc.')
-        if nested and not nodes:
-            raise Error(self.peek(), 'Bloque vacio.')
+        if nested and not nodes: raise Error(self.peek(), 'Bloque vacio.')
         return nodes
+
     def parse(self):
         body = self.block()
         self.take('EOF')

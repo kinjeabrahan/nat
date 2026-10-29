@@ -1,7 +1,7 @@
 import re
 from .model import Token, Error
 
-PATTERN = re.compile(r'(?P<SPACE> +)|(?P<COMMENT>\#.*)|(?P<STRING>"(?:[^"\\\r\n]|\\.)*")|(?P<INT>[0-9]+)|(?P<NAME>[A-Za-z_][A-Za-z_0-9]*)|(?P<OP>==|!=|<=|>=|[+*%<>=():-])')
+PATTERN = re.compile(r'(?P<SPACE> +)|(?P<COMMENT>\#.*)|(?P<STRING>"(?:[^"\\\r\n]|\\.)*")|(?P<INT>[0-9]+)|(?P<NAME>[A-Za-z_][A-Za-z_0-9]*)|(?P<OP>->|==|!=|<=|>=|[+*%<>=():,-])')
 
 def lex(source, path='<entrada>'):
     tokens = []

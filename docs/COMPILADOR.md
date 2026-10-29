@@ -1,3 +1,6 @@
+> Documento de entrega 2. Sus cifras de pruebas corresponden a esa entrega.
+> Estado actualizado del repositorio y correcciones: [entrega 3](ENTREGA3.md).
+
 # Nat, entrega 2: compilador AOT experimental
 
 ## Qué existe ahora
@@ -10,8 +13,10 @@ el runtime generado es C con libc. No hay self-hosting.
 La primera entrega se verificó antes de editar: su parche se aplica a la
 instantánea original y reproduce el `nat.c` local. Las 41 pruebas anteriores
 pasaron normalmente y bajo ASan/UBSan. GitHub `main` sigue en
-`0ef1d60775ed96ac6901049092d26a125b9ccc5e`. Los cambios de ambas entregas
-siguen siendo locales; esta carpeta no es un clon Git autenticado.
+`0ef1d60775ed96ac6901049092d26a125b9ccc5e`. En el momento de producir esa entrega los cambios eran locales. La
+reinspección posterior encontró ambas entregas integradas en el commit
+`fd64d424e604eec93ef2bf0f6cc235d76ffbb210` (`nat V1.0`). La copia de
+trabajo de esta sesión sigue siendo una instantánea, no un clon autenticado.
 
 ## Backend elegido
 

@@ -6,7 +6,7 @@
 #include <errno.h>
 #include <string.h>
 
-static inline void nat_fail(int line, int column, const char *message) {
+static _Noreturn inline void nat_fail(int line, int column, const char *message) {
     fprintf(stderr, "%s:%d:%d: %s\n", nat_source, line, column, message);
     exit(1);
 }
@@ -42,4 +42,16 @@ static inline int64_t nat_input(int argc, char **argv, int l, int c) {
     if (errno == ERANGE || *end || r < INT64_MIN || r > INT64_MAX)
         nat_fail(l,c,"Entrada fuera de Int64.");
     return (int64_t)r;
+}
+
+static int nat_argc;
+static char **nat_argv;
+static unsigned nat_depth;
+static inline void nat_enter(int l, int c) {
+    if (++nat_depth > 128) nat_fail(l,c,"Limite de llamadas alcanzado (128).");
+}
+static inline int64_t nat_read_byte(int l, int c) {
+    int b = getchar();
+    if (b == EOF && ferror(stdin)) nat_fail(l,c,"Error de lectura de entrada.");
+    return b == EOF ? INT64_C(-1) : (int64_t)(unsigned char)b;
 }

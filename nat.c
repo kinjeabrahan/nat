@@ -31,7 +31,6 @@
 #include <string.h>
 #include <ctype.h>
 #include <errno.h>
-#include <limits.h>
 
 #define NAT_VERSION "0.3.0"
 
@@ -67,13 +66,13 @@ static unsigned long total_iteraciones = 0;
    ERRORES Y MEMORIA
    ========================================================= */
 
-static void error_general(const char *mensaje)
+static _Noreturn void error_general(const char *mensaje)
 {
     fprintf(stderr, "[Nat %s] %s\n", NAT_VERSION, mensaje);
     exit(EXIT_FAILURE);
 }
 
-static void error_nat(
+static _Noreturn void error_nat(
     const char *ruta,
     int linea,
     const char *mensaje)
@@ -96,6 +95,14 @@ static void *nat_malloc(size_t cantidad)
 
     return p;
 }
+
+static void comprobar_formato(int n, size_t capacidad, const char *ruta, int linea)
+{
+    if (n < 0 || (size_t)n >= capacidad)
+        error_nat(ruta, linea, "Texto formateado demasiado largo o error de formato.");
+}
+
+#include "legacy_lex.h"
 
 /* =========================================================
    UTILIDADES DE TEXTO
@@ -270,6 +277,9 @@ static void asignar_variable(
 
 static void cargar_programa(Programa *p, const char *ruta)
 {
+    if (ruta[0] == '\0')
+        error_general("La ruta no puede estar vacia.");
+
     if (strlen(ruta) >= sizeof(p->ruta))
         error_general("La ruta del archivo es demasiado larga.");
 
@@ -279,13 +289,14 @@ static void cargar_programa(Programa *p, const char *ruta)
     {
         char mensaje[MAX_RUTA + 128];
 
-        snprintf(
+        int n = snprintf(
             mensaje,
             sizeof(mensaje),
             "No se pudo abrir '%s' (errno=%d).",
             ruta,
             errno);
 
+        comprobar_formato(n, sizeof(mensaje), ruta, 1);
         error_general(mensaje);
     }
 
@@ -594,7 +605,7 @@ static void evaluar_funcion_cadena(
         if (cantidad != 1)
             error_nat(ruta, numero_linea, "longitud() necesita un argumento.");
 
-        snprintf(salida, capacidad, "%zu", strlen(valor1));
+        comprobar_formato(snprintf(salida, capacidad, "%zu", strlen(valor1)), capacidad, ruta, numero_linea);
         return;
     }
 
@@ -637,15 +648,16 @@ static void evaluar_funcion_cadena(
 
         if (encontrado == NULL)
         {
-            snprintf(salida, capacidad, "-1");
+            comprobar_formato(snprintf(salida, capacidad, "-1"), capacidad, ruta, numero_linea);
         }
         else
         {
-            snprintf(
+            int n = snprintf(
                 salida,
                 capacidad,
                 "%ld",
                 (long)(encontrado - valor1));
+            comprobar_formato(n, capacidad, ruta, numero_linea);
         }
 
         return;
@@ -671,68 +683,50 @@ static void resolver_operando(
     if (capacidad == 0)
         error_nat(ruta, numero_linea, "Buffer de salida no valido.");
 
-    /* Cadenas literales. */
-    if (n >= 2 && texto[0] == '"' && texto[n - 1] == '"')
+    const char *cursor = texto;
+    NatToken token = nat_siguiente(&cursor, ruta, numero_linea);
+    NatToken siguiente = nat_siguiente(&cursor, ruta, numero_linea);
+
+    if (token.clase == NAT_ID && siguiente.clase == NAT_ABRE)
     {
-        texto[n - 1] = '\0';
-
-        const char *interior = texto + 1;
-        size_t j = 0;
-
-        for (size_t i = 0; interior[i] != '\0'; i++)
-        {
-            char c = interior[i];
-
-            if (c == '\\' &&
-                (interior[i + 1] == '"' ||
-                 interior[i + 1] == '\\'))
-            {
-                c = interior[++i];
-            }
-
-            if (j + 1 >= capacidad)
-                error_nat(ruta, numero_linea, "Cadena demasiado larga.");
-
-            salida[j++] = c;
-        }
-
-        salida[j] = '\0';
+        evaluar_funcion_cadena(texto, salida, capacidad, ruta, numero_linea);
         return;
     }
+    if (siguiente.clase != NAT_FIN)
+        error_nat(ruta, numero_linea, "Expresion no valida; las cadenas necesitan comillas y un solo literal.");
 
-    /* Funciones de cadenas. */
-    if (strchr(texto, '(') != NULL)
+    const char *valor = NULL;
+    if (token.clase == NAT_CADENA) valor = token.valor;
+    else if (token.clase == NAT_ID)
     {
-        evaluar_funcion_cadena(
-            texto,
-            salida,
-            capacidad,
-            ruta,
-            numero_linea);
-
-        return;
-    }
-
-    /* Variables. */
-    if (identificador_valido(texto))
-    {
-        const char *valor = obtener_variable(texto);
-
-        if (valor != NULL)
+        char nombre[MAX_NOMBRE];
+        if (token.longitud >= sizeof(nombre))
+            error_nat(ruta, numero_linea, "Nombre de variable demasiado largo.");
+        memcpy(nombre, token.inicio, token.longitud);
+        nombre[token.longitud] = '\0';
+        valor = obtener_variable(nombre);
+        if (valor == NULL)
         {
-            if (strlen(valor) >= capacidad)
-                error_nat(ruta, numero_linea, "Valor demasiado largo.");
-
-            strcpy(salida, valor);
-            return;
+            char mensaje[MAX_NOMBRE + 64];
+            int n = snprintf(mensaje, sizeof(mensaje), "Variable no definida: %s.", nombre);
+            if (n < 0 || (size_t)n >= sizeof(mensaje))
+                error_nat(ruta, numero_linea, "Error al construir diagnostico.");
+            error_nat(ruta, numero_linea, mensaje);
         }
     }
+    else if (token.clase == NAT_ENTERO || nat_palabra(&token, "verdadero") || nat_palabra(&token, "falso"))
+    {
+        if (token.longitud >= capacidad)
+            error_nat(ruta, numero_linea, "Operando demasiado largo.");
+        memcpy(salida, texto, token.longitud);
+        salida[token.longitud] = '\0';
+        return;
+    }
+    else error_nat(ruta, numero_linea, "Operando no valido; las cadenas necesitan comillas.");
 
-    /* Literales sin comillas, por ejemplo numeros. */
-    if (strlen(texto) >= capacidad)
-        error_nat(ruta, numero_linea, "Operando demasiado largo.");
-
-    strcpy(salida, texto);
+    if (strlen(valor) >= capacidad)
+        error_nat(ruta, numero_linea, "Cadena demasiado larga.");
+    strcpy(salida, valor);
 }
 
 /* =========================================================
@@ -853,7 +847,7 @@ static char *buscar_igual_asignacion(char *texto)
 
         if (!comillas && *p == '=')
         {
-            if (p[1] == '=' || (p > texto && p[-1] == '!'))
+            if (p[1] == '=' || (p > texto && (p[-1] == '!' || p[-1] == '=')))
                 continue;
 
             return p;
@@ -943,6 +937,47 @@ static int encontrar_fin_bloque(
     return fin;
 }
 
+/* Validate lexical strings and block structure before any side effects. */
+static void validar_estructura(Programa *p)
+{
+    int anterior = 0, necesita_cuerpo = 0, ultima_linea = 0;
+    for (int i = 0; i < p->total; i++)
+    {
+        if (linea_ignorable(p->lineas[i])) continue;
+        int nivel = obtener_indentacion(p->lineas[i], p->ruta, i + 1);
+        if (strchr(p->lineas[i], '\t') != NULL)
+        {
+            const char *inicio = p->lineas[i];
+            while (*inicio == ' ' || *inicio == '\t')
+                if (*inicio++ == '\t') error_nat(p->ruta, i + 1, "Indentacion: usa cuatro espacios, sin tabuladores.");
+        }
+        if (nivel % 4 != 0)
+            error_nat(p->ruta, i + 1, "Indentacion: usa cuatro espacios por nivel.");
+        if (necesita_cuerpo && nivel != anterior + 4)
+            error_nat(p->ruta, i + 1, "El bloque necesita una linea indentada exactamente cuatro espacios.");
+        if (!necesita_cuerpo && nivel > anterior)
+            error_nat(p->ruta, i + 1, "Indentacion inesperada fuera de un bloque.");
+        const char *cursor = quitar_indentacion(p->lineas[i]);
+        NatToken primero = nat_siguiente(&cursor, p->ruta, i + 1);
+        NatToken segundo = nat_siguiente(&cursor, p->ruta, i + 1);
+        if (primero.clase == NAT_RESERVADA && segundo.clase == NAT_ASIGNAR)
+            error_nat(p->ruta, i + 1, "No puedes asignar a una palabra reservada.");
+        NatToken ultimo = primero, actual = segundo;
+        while (actual.clase != NAT_FIN)
+        {
+            ultimo = actual;
+            actual = nat_siguiente(&cursor, p->ruta, i + 1);
+        }
+        necesita_cuerpo = nat_palabra(&primero, "si") || nat_palabra(&primero, "mientras");
+        if (necesita_cuerpo && ultimo.clase != NAT_DOSPUNTOS)
+            error_nat(p->ruta, i + 1, "Falta ':' en el bloque.");
+        anterior = nivel;
+        ultima_linea = i + 1;
+    }
+    if (necesita_cuerpo)
+        error_nat(p->ruta, ultima_linea + 1, "El bloque esta vacio.");
+}
+
 static void ejecutar_archivo(const char *ruta, int profundidad_archivos)
 {
     if (profundidad_archivos >= MAX_PROFUNDIDAD_ARCHIVOS)
@@ -951,6 +986,7 @@ static void ejecutar_archivo(const char *ruta, int profundidad_archivos)
     Programa programa;
 
     cargar_programa(&programa, ruta);
+    validar_estructura(&programa);
 
     ejecutar_rango(
         &programa,
@@ -1012,13 +1048,28 @@ static void ejecutar_rango(
 
         int numero_linea = pc + 1;
 
-        int es_si = strncmp(instruccion, "si ", 3) == 0;
-        int es_mientras = strncmp(instruccion, "mientras ", 9) == 0;
+        const char *cursor = instruccion;
+        NatToken primero = nat_siguiente(&cursor, p->ruta, numero_linea);
+        const char *argumentos = cursor;
+        NatToken segundo = nat_siguiente(&cursor, p->ruta, numero_linea);
+        if (segundo.clase == NAT_ASIGNAR)
+        {
+            if (primero.clase == NAT_RESERVADA)
+                error_nat(p->ruta, numero_linea, "No puedes asignar a una palabra reservada.");
+            ejecutar_asignacion(instruccion, p->ruta, numero_linea);
+            pc++;
+            continue;
+        }
+        if (segundo.clase == NAT_IGUAL || segundo.clase == NAT_DISTINTO)
+            error_nat(p->ruta, numero_linea, "Una comparacion no es una asignacion; usa '='.");
+        int es_si = nat_palabra(&primero, "si");
+        int es_mientras = nat_palabra(&primero, "mientras");
 
         /* SI y MIENTRAS */
         if (es_si || es_mientras)
         {
-            char *condicion = instruccion + (es_si ? 3 : 9);
+            char *condicion = (char *)argumentos;
+            condicion = recortar(condicion);
             size_t n = strlen(condicion);
 
             if (n == 0 || condicion[n - 1] != ':')
@@ -1068,11 +1119,9 @@ static void ejecutar_rango(
         }
 
         /* IMPRIMIR */
-        if (strncmp(instruccion, "imprimir", 8) == 0 &&
-            (instruccion[8] == '\0' ||
-             isspace((unsigned char)instruccion[8])))
+        if (nat_palabra(&primero, "imprimir"))
         {
-            char *argumento = recortar(instruccion + 8);
+            char *argumento = recortar((char *)argumentos);
 
             if (*argumento == '\0')
                 error_nat(p->ruta, numero_linea, "imprimir necesita un argumento.");
@@ -1092,28 +1141,19 @@ static void ejecutar_rango(
         }
 
         /* LEER */
-        if (strncmp(instruccion, "leer", 4) == 0 &&
-            (instruccion[4] == '\0' ||
-             isspace((unsigned char)instruccion[4])))
+        if (nat_palabra(&primero, "leer"))
         {
-            char *argumento = recortar(instruccion + 4);
-            size_t n = strlen(argumento);
-
-            if (n < 2 || argumento[0] != '"' || argumento[n - 1] != '"')
-                error_nat(
-                    p->ruta,
-                    numero_linea,
-                    "Sintaxis correcta: leer \"archivo.nat\".");
-
-            argumento[n - 1] = '\0';
-
-            char ruta_solicitada[MAX_RUTA];
+            const char *entrada = argumentos;
+            NatToken archivo = nat_siguiente(&entrada, p->ruta, numero_linea);
+            NatToken fin = nat_siguiente(&entrada, p->ruta, numero_linea);
+            if (archivo.clase != NAT_CADENA || fin.clase != NAT_FIN)
+                error_nat(p->ruta, numero_linea, "Sintaxis correcta: leer \"archivo.nat\".");
+            if (archivo.valor[0] == '\0')
+                error_nat(p->ruta, numero_linea, "La ruta no puede estar vacia.");
+            if (strchr(archivo.valor, '\n') || strchr(archivo.valor, '\t'))
+                error_nat(p->ruta, numero_linea, "La ruta no puede contener saltos de linea ni tabuladores.");
+            const char *ruta_solicitada = archivo.valor;
             char ruta_final[MAX_RUTA];
-
-            if (strlen(argumento + 1) >= sizeof(ruta_solicitada))
-                error_nat(p->ruta, numero_linea, "Ruta demasiado larga.");
-
-            strcpy(ruta_solicitada, argumento + 1);
 
             construir_ruta_include(
                 p->ruta,
@@ -1125,14 +1165,6 @@ static void ejecutar_rango(
 
             ejecutar_archivo(ruta_final, profundidad_archivos + 1);
 
-            pc++;
-            continue;
-        }
-
-        /* ASIGNACION */
-        if (buscar_igual_asignacion(instruccion) != NULL)
-        {
-            ejecutar_asignacion(instruccion, p->ruta, numero_linea);
             pc++;
             continue;
         }

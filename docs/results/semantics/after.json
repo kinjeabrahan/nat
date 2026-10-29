@@ -1,0 +1,44 @@
+{
+  "undefined": {
+    "source": "imprimir nombr\n",
+    "status": 1,
+    "stdout": "",
+    "stderr": "[Nat 0.3.0] /workspace/scratch/a51f98983aed/after3-undefined.nat:1: Variable no definida: nombr.\n"
+  },
+  "unclosed": {
+    "source": "imprimir \"Nat\n",
+    "status": 1,
+    "stdout": "",
+    "stderr": "[Nat 0.3.0] /workspace/scratch/a51f98983aed/after3-unclosed.nat:1: Cadena sin cerrar.\n"
+  },
+  "adjacent": {
+    "source": "imprimir \"a\" \"b\"\n",
+    "status": 1,
+    "stdout": "",
+    "stderr": "[Nat 0.3.0] /workspace/scratch/a51f98983aed/after3-adjacent.nat:1: Expresion no valida; las cadenas necesitan comillas y un solo literal.\n"
+  },
+  "reserved": {
+    "source": "si = \"x\"\n",
+    "status": 1,
+    "stdout": "",
+    "stderr": "[Nat 0.3.0] /workspace/scratch/a51f98983aed/after3-reserved.nat:1: No puedes asignar a una palabra reservada.\n"
+  },
+  "comparison": {
+    "source": "a==b\n",
+    "status": 1,
+    "stdout": "",
+    "stderr": "[Nat 0.3.0] /workspace/scratch/a51f98983aed/after3-comparison.nat:1: Una comparacion no es una asignacion; usa '='.\n"
+  },
+  "prefix": {
+    "source": "imprimirx = \"bien\"\nimprimir imprimirx\n",
+    "status": 0,
+    "stdout": "bien\n",
+    "stderr": ""
+  },
+  "indent": {
+    "source": "si \"a\" == \"a\":\n    imprimir \"a\"\n        imprimir \"b\"\n",
+    "status": 1,
+    "stdout": "",
+    "stderr": "[Nat 0.3.0] /workspace/scratch/a51f98983aed/after3-indent.nat:3: Indentacion inesperada fuera de un bloque.\n"
+  }
+}

@@ -1,0 +1,56 @@
+# Preanalisis de texto y clasificador ASCII para futuras herramientas de Nat.
+func es_blanco(b: Int) -> Bool:
+    retornar b == 32 o (b >= 9 y b <= 13)
+
+func es_inicio(b: Int) -> Bool:
+    retornar (b >= 65 y b <= 90) o (b >= 97 y b <= 122) o b == 95
+
+func es_digito(b: Int) -> Bool:
+    retornar b >= 48 y b <= 57
+
+# 0 blanco; 1 inicio de identificador; 2 digito; 3 otro byte.
+func clase_ascii(b: Int) -> Int:
+    si es_blanco(b):
+        retornar 0
+    si es_inicio(b):
+        retornar 1
+    si es_digito(b):
+        retornar 2
+    retornar 3
+
+func analizar() -> Int:
+    bytes = 0
+    lineas = 0
+    palabras = 0
+    identificadores = 0
+    en_palabra = falso
+    en_identificador = falso
+    b = leer_byte()
+    mientras b != -1:
+        bytes = bytes + 1
+        si b == 10:
+            lineas = lineas + 1
+        clase = clase_ascii(b)
+        si clase == 0:
+            en_palabra = falso
+        sino:
+            si no en_palabra:
+                palabras = palabras + 1
+            en_palabra = verdadero
+        si clase != 1 y clase != 2:
+            en_identificador = falso
+        si clase == 1 y no en_identificador:
+            identificadores = identificadores + 1
+            en_identificador = verdadero
+        b = leer_byte()
+    imprimir "lineas"
+    imprimir lineas
+    imprimir "palabras"
+    imprimir palabras
+    imprimir "identificadores_ascii"
+    imprimir identificadores
+    retornar bytes
+
+bytes = analizar()
+imprimir "bytes"
+imprimir bytes
