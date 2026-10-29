@@ -1,0 +1,8 @@
+# Este es el interprete de Nat escrito en Nat (nat.nat)
+modo_dev = "activo"
+
+si modo_dev == "activo"
+imprimir "Cargando el nucleo de Nat desde nat.nat..."
+
+# Aqui usaremos la instruccion leer para procesar el codigo del usuario
+leer "holamundo.nat"

@@ -1,0 +1,10 @@
+
+texto = "Nat"
+
+imprimir longitud(texto)
+imprimir caracter(texto, 1)
+imprimir buscar(texto, "a")
+imprimir buscar(texto, "z")
+
+si longitud(texto) == "3":
+    imprimir "Longitud correcta"

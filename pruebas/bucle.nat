@@ -1,0 +1,7 @@
+contador = "0"
+
+mientras contador == "0":
+    imprimir "Entrando al ciclo de Nat"
+    contador = "1"
+
+imprimir "Ciclo finalizado"

@@ -1,0 +1,8 @@
+# Intérprete Metacircular de Nat (escrito en Nat)
+estado_motor = "iniciado"
+
+si estado_motor == "iniciado"
+imprimir "[Nat-Core] Sistema metacircular cargado correctamente."
+
+# Aquí es donde el lenguaje empieza a autoejecutar su entorno
+leer "bucle.nat"

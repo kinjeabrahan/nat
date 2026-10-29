@@ -1,0 +1,8 @@
+# Prueba de bucle en Nat
+contador = "0"
+
+mientras contador == "0"
+imprimir "Entrando al ciclo de ejecucion de Nat"
+contador = "1"
+
+imprimir "Ciclo finalizado con exito"

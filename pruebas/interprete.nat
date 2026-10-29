@@ -1,0 +1,7 @@
+estado_motor = "iniciado"
+
+si estado_motor == "iniciado":
+    imprimir "[Nat-Core] Sistema cargado"
+    leer "bucle.nat"
+
+imprimir "Programa principal finalizado"
