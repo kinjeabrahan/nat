@@ -19,3 +19,4 @@ class Node:
     args: list = field(default_factory=list)
     value: object = None
     type: str = ''
+    binding: str = ''

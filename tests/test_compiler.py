@@ -48,13 +48,13 @@ class CompilerTests(unittest.TestCase):
         self.assertEqual(ast[0].args[0].args[1].op,'*')
     def test_semantic_representation(self):
         ast=Parser(lex('a = 1\nb = verdadero\nc = "Nat"\n')).parse()
-        self.assertEqual(analyze(ast),{'a':'Int','b':'Bool','c':'Texto'})
+        self.assertEqual({b.name:b.type for b in analyze(ast).entry.locals},{'a':'Int','b':'Bool','c':'Texto'})
     def test_ir_types_and_branches(self):
         ir=compile_source('i = 0\nmientras i < 3:\n    i = i + 1\n','ir.nat')
         json.dumps(ir)
-        self.assertIn('Int',ir['types'].values())
-        self.assertIn('Bool',ir['types'].values())
-        self.assertIn('branch_false',[i['op'] for i in ir['instructions']])
+        self.assertIn('Int',ir['entry']['types'].values())
+        self.assertIn('Bool',ir['entry']['types'].values())
+        self.assertIn('branch_false',[i['op'] for i in ir['entry']['instructions']])
     def test_arithmetic_precedence(self):
         self.good('imprimir 2 + 3 * 4\nimprimir (2 + 3) * 4\nimprimir -7 % 3\n','14\n20\n-1\n')
     def test_literals_and_text(self):
@@ -75,8 +75,8 @@ class CompilerTests(unittest.TestCase):
                 with self.assertRaises(Error): compile_source(source,'type.nat')
     def test_undefined_even_in_dead_branch(self):
         self.bad('si falso:\n    imprimir ausente\n','no definida')
-    def test_nested_declaration_rejected(self):
-        self.bad('si verdadero:\n    a = 1\n','antes del bloque')
+    def test_nested_declaration_does_not_escape(self):
+        self.bad('si verdadero:\n    a = 1\nimprimir a\n','no definida')
     def test_invalid_syntax(self):
         for source in ['imprimir "ab\n','imprimir [1]\n','imprimir "a" "b"\n','imprimir 1 / 2\n','imprimir "\\u0000"\n','    imprimir 1\n','si verdadero:\n\timprimir 1\n','si verdadero:\n        imprimir 1\n']:
             with self.subTest(source=source):
