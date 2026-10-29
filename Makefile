@@ -23,6 +23,7 @@ test: build/nat
 	$(PYTHON) tests/test_nat.py --nat build/nat
 	$(PYTHON) -m unittest discover -s tests -p test_compiler.py -v
 	$(PYTHON) -m unittest discover -s tests -p test_functions.py -v
+	$(PYTHON) -m unittest discover -s tests -p test_source_tool.py -v
 
 test-sanitize: build/nat-sanitize
 	ASAN_OPTIONS='$(ASAN_OPTIONS)' UBSAN_OPTIONS='$(UBSAN_OPTIONS)' $(PYTHON) tests/test_nat.py --nat build/nat-sanitize
@@ -46,3 +47,7 @@ benchmark-native:
 .PHONY: test-functions
 test-functions:
 	$(PYTHON) -m unittest discover -s tests -p test_functions.py -v
+
+.PHONY: source-tool
+source-tool: | build
+	$(PYTHON) -m natc build herramientas/nat_fuente.nat --backend asm -o build/nat-fuente
