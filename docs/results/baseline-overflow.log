@@ -1,0 +1,1 @@
+nat.c:575:13: runtime error: index 2 out of bounds for type 'char [2][512]'

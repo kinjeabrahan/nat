@@ -1,0 +1,23 @@
+test_arithmetic_precedence (test_compiler.CompilerTests.test_arithmetic_precedence) ... ok
+test_ast_structure (test_compiler.CompilerTests.test_ast_structure) ... ok
+test_failed_build_preserves_output (test_compiler.CompilerTests.test_failed_build_preserves_output) ... ok
+test_generated_arithmetic_differential (test_compiler.CompilerTests.test_generated_arithmetic_differential) ... ok
+test_input_validation (test_compiler.CompilerTests.test_input_validation) ... ok
+test_invalid_syntax (test_compiler.CompilerTests.test_invalid_syntax) ... ok
+test_ir_types_and_branches (test_compiler.CompilerTests.test_ir_types_and_branches) ... ok
+test_lexer_positions (test_compiler.CompilerTests.test_lexer_positions) ... ok
+test_literals_and_text (test_compiler.CompilerTests.test_literals_and_text) ... ok
+test_loop_and_nested_condition (test_compiler.CompilerTests.test_loop_and_nested_condition) ... ok
+test_min_max (test_compiler.CompilerTests.test_min_max) ... ok
+test_nested_declaration_rejected (test_compiler.CompilerTests.test_nested_declaration_rejected) ... ok
+test_out_of_range_literal (test_compiler.CompilerTests.test_out_of_range_literal) ... ok
+test_overflow_and_zero (test_compiler.CompilerTests.test_overflow_and_zero) ... ok
+test_semantic_representation (test_compiler.CompilerTests.test_semantic_representation) ... ok
+test_short_circuit (test_compiler.CompilerTests.test_short_circuit) ... ok
+test_type_errors (test_compiler.CompilerTests.test_type_errors) ... ok
+test_undefined_even_in_dead_branch (test_compiler.CompilerTests.test_undefined_even_in_dead_branch) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 2.479s
+
+OK

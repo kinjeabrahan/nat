@@ -1,0 +1,7 @@
+n = entrada_entero()
+i = 0
+x = 1
+mientras i < n:
+    x = (x * 17 + i) % 1000003
+    i = i + 1
+imprimir x

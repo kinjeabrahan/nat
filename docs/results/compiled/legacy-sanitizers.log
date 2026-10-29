@@ -1,0 +1,47 @@
+ASAN_OPTIONS='detect_leaks=0:halt_on_error=1' UBSAN_OPTIONS='halt_on_error=1' python3 tests/test_nat.py --nat build/nat-sanitize
+test_assignment_and_copy (__main__.BaselineTests.test_assignment_and_copy) ... ok
+test_cli_usage (__main__.BaselineTests.test_cli_usage) ... ok
+test_comments_and_escapes (__main__.BaselineTests.test_comments_and_escapes) ... ok
+test_crlf (__main__.BaselineTests.test_crlf) ... ok
+test_empty_argument (__main__.BaselineTests.test_empty_argument) ... ok
+test_empty_block (__main__.BaselineTests.test_empty_block) ... ok
+test_empty_string (__main__.BaselineTests.test_empty_string) ... ok
+test_eof_without_newline (__main__.BaselineTests.test_eof_without_newline) ... ok
+test_existing_loop (__main__.BaselineTests.test_existing_loop) ... ok
+test_existing_module (__main__.BaselineTests.test_existing_module) ... ok
+test_existing_strings (__main__.BaselineTests.test_existing_strings) ... ok
+test_false_condition (__main__.BaselineTests.test_false_condition) ... ok
+test_file_line_limit (__main__.BaselineTests.test_file_line_limit) ... ok
+test_global_iteration_limit (__main__.BaselineTests.test_global_iteration_limit) ... ok
+test_hello_module (__main__.BaselineTests.test_hello_module) ... ok
+test_identifier_limit (__main__.BaselineTests.test_identifier_limit) ... ok
+test_include_depth_limit (__main__.BaselineTests.test_include_depth_limit) ... ok
+test_index_out_of_bounds (__main__.BaselineTests.test_index_out_of_bounds) ... ok
+test_invalid_indices (__main__.BaselineTests.test_invalid_indices) ... ok
+test_line_limit (__main__.BaselineTests.test_line_limit) ... ok
+test_missing_argument (__main__.BaselineTests.test_missing_argument) ... ok
+test_missing_colon (__main__.BaselineTests.test_missing_colon) ... ok
+test_missing_file (__main__.BaselineTests.test_missing_file) ... ok
+test_mixed_indentation (__main__.BaselineTests.test_mixed_indentation) ... ok
+test_negative_index (__main__.BaselineTests.test_negative_index) ... ok
+test_nested_blocks (__main__.BaselineTests.test_nested_blocks) ... ok
+test_nested_calls (__main__.BaselineTests.test_nested_calls) ... ok
+test_quoted_delimiters (__main__.BaselineTests.test_quoted_delimiters) ... ok
+test_relative_nested_modules (__main__.BaselineTests.test_relative_nested_modules) ... ok
+test_top_level_indentation (__main__.BaselineTests.test_top_level_indentation) ... ok
+test_unknown_function (__main__.BaselineTests.test_unknown_function) ... ok
+test_value_boundary (__main__.BaselineTests.test_value_boundary) ... ok
+test_variable_limit (__main__.BaselineTests.test_variable_limit) ... ok
+test_extra_argument_on_length (__main__.ArgumentLimitTests.test_extra_argument_on_length) ... ok
+test_four_arguments (__main__.ArgumentLimitTests.test_four_arguments) ... ok
+test_nested_overflow (__main__.ArgumentLimitTests.test_nested_overflow) ... ok
+test_third_argument_after_comma_in_string (__main__.ArgumentLimitTests.test_third_argument_after_comma_in_string) ... ok
+test_third_identifier_argument (__main__.ArgumentLimitTests.test_third_identifier_argument) ... ok
+test_third_literal_argument (__main__.ArgumentLimitTests.test_third_literal_argument) ... ok
+test_third_nested_argument (__main__.ArgumentLimitTests.test_third_nested_argument) ... ok
+test_trailing_comma_after_two (__main__.ArgumentLimitTests.test_trailing_comma_after_two) ... ok
+
+----------------------------------------------------------------------
+Ran 41 tests in 0.881s
+
+OK

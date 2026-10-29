@@ -1,0 +1,9 @@
+n = entrada_entero()
+i = 0
+suma = 0
+mientras i < n:
+    suma = suma + i
+    i = i + 1
+imprimir suma
+imprimir suma >= 0
+imprimir "Nat compilado"

@@ -1,0 +1,50 @@
+{
+  "repository": "kinjeabrahan/nat",
+  "visibility_at_inspection": "private",
+  "base_commit": "0ef1d60775ed96ac6901049092d26a125b9ccc5e",
+  "base_tree": "1b15bab55d8c1e55f818f3527f980515b3511fbc",
+  "history": [
+    {
+      "sha": "0ef1d60775ed96ac6901049092d26a125b9ccc5e",
+      "date": "2026-10-29T15:07:19Z",
+      "message": "nat v0.3.0",
+      "tree": "1b15bab55d8c1e55f818f3527f980515b3511fbc",
+      "parents": [
+        "5d4663b0d7fb5429dd3504e19d8172f0b56918fb"
+      ]
+    },
+    {
+      "sha": "5d4663b0d7fb5429dd3504e19d8172f0b56918fb",
+      "date": "2026-10-29T12:53:56Z",
+      "message": "Initial commit",
+      "tree": "6f9509c88bed7080d496fc5e1d87a9315e30549d",
+      "parents": []
+    }
+  ],
+  "access": "Pinned GitHub connector source snapshot; terminal clone unavailable without Git credentials",
+  "is_git_checkout": false,
+  "source_blob_hashes": {
+    ".gitattributes": "dfe0770424b2a19faf507a501ebfc23be8f54e7b",
+    "bucle_v01.nat": "67b89d4f5596da8260fdee0c44a8ede290fe8381",
+    "holamundo.nat": "b78c2d80f86104bf6014d4c0a33e33c737a69884",
+    "interprete.nat": "f6943b7dc96234eeac01e6e1b9d71c3cc22f0788",
+    "interprete_v01.nat": "5603042cf5a1836428f1aeb435b297fe0c0b985b",
+    "nat.c": "4be2b0b043d6e11b5fde15e3b2d0491969706026",
+    "nat.exe": "a798467f3d7b0808a6162b5f662ed929dd148b84",
+    "nat.nat": "d84efd88f7f91d15c595138c1c2664236c4cd302",
+    "nat_v01.c": "b3a79ba33db7c44473cf2184ae1ddaf1270eb9e8",
+    "pruebas/bucle.nat": "8d46226d642f8ec112ffb443926e662723226cb7",
+    "pruebas/cadenas.nat": "1b700ba16b1021ac3306f7c89132fd4ca0aff0e6",
+    "pruebas/interprete.nat": "f6943b7dc96234eeac01e6e1b9d71c3cc22f0788",
+    "subprograma.nat": "efa50bbd3905ec6976e90ddb6a0f600c891ea5f6"
+  },
+  "excluded_local_files": [
+    {
+      "path": "nat.exe",
+      "reason": "Connector rejected non-UTF-8 executable; not downloaded, run, modified or removed remotely"
+    }
+  ],
+  "remote_mutations": [],
+  "new_commits": [],
+  "validation_date": "2026-10-29"
+}

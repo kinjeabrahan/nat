@@ -523,6 +523,10 @@ static void evaluar_funcion_cadena(
     {
         char c = *p;
 
+        /* Validar la fila antes de escribir cualquier byte del argumento. */
+        if (cantidad >= 2)
+            error_nat(ruta, numero_linea, "Demasiados argumentos.");
+
         if (escape)
         {
             escape = 0;
@@ -549,9 +553,6 @@ static void evaluar_funcion_cadena(
 
         if (separador || c == '\0')
         {
-            if (cantidad >= 2)
-                error_nat(ruta, numero_linea, "Demasiados argumentos.");
-
             if (longitud_arg >= sizeof(args[0]))
                 error_nat(ruta, numero_linea, "Argumento demasiado largo.");
 

@@ -1,0 +1,83 @@
+test_extra_argument_on_length (__main__.ArgumentLimitTests.test_extra_argument_on_length) ... FAIL
+test_four_arguments (__main__.ArgumentLimitTests.test_four_arguments) ... FAIL
+test_nested_overflow (__main__.ArgumentLimitTests.test_nested_overflow) ... FAIL
+test_third_argument_after_comma_in_string (__main__.ArgumentLimitTests.test_third_argument_after_comma_in_string) ... FAIL
+test_third_identifier_argument (__main__.ArgumentLimitTests.test_third_identifier_argument) ... FAIL
+test_third_literal_argument (__main__.ArgumentLimitTests.test_third_literal_argument) ... FAIL
+test_third_nested_argument (__main__.ArgumentLimitTests.test_third_nested_argument) ... FAIL
+test_trailing_comma_after_two (__main__.ArgumentLimitTests.test_trailing_comma_after_two) ... ok
+
+======================================================================
+FAIL: test_extra_argument_on_length (__main__.ArgumentLimitTests.test_extra_argument_on_length)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/a51f98983aed/nat/tests/test_nat.py", line 185, in test_extra_argument_on_length
+    self.assert_error('imprimir longitud("Nat", "a", "extra")\n', "Demasiados argumentos.")
+  File "/workspace/scratch/a51f98983aed/nat/tests/test_nat.py", line 37, in assert_error
+    self.assertIn(expected, result.stderr)
+AssertionError: 'Demasiados argumentos.' not found in "nat.c:575:13: runtime error: index 2 out of bounds for type 'char [2][512]'\n"
+
+======================================================================
+FAIL: test_four_arguments (__main__.ArgumentLimitTests.test_four_arguments)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/a51f98983aed/nat/tests/test_nat.py", line 188, in test_four_arguments
+    self.assert_error('imprimir buscar("Nat", "a", "b", "c")\n', "Demasiados argumentos.")
+  File "/workspace/scratch/a51f98983aed/nat/tests/test_nat.py", line 37, in assert_error
+    self.assertIn(expected, result.stderr)
+AssertionError: 'Demasiados argumentos.' not found in "nat.c:575:13: runtime error: index 2 out of bounds for type 'char [2][512]'\n"
+
+======================================================================
+FAIL: test_nested_overflow (__main__.ArgumentLimitTests.test_nested_overflow)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/a51f98983aed/nat/tests/test_nat.py", line 191, in test_nested_overflow
+    self.assert_error('imprimir longitud(buscar("Nat", "a", "extra"))\n',
+  File "/workspace/scratch/a51f98983aed/nat/tests/test_nat.py", line 37, in assert_error
+    self.assertIn(expected, result.stderr)
+AssertionError: 'Demasiados argumentos.' not found in "nat.c:575:13: runtime error: index 2 out of bounds for type 'char [2][512]'\n"
+
+======================================================================
+FAIL: test_third_argument_after_comma_in_string (__main__.ArgumentLimitTests.test_third_argument_after_comma_in_string)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/a51f98983aed/nat/tests/test_nat.py", line 182, in test_third_argument_after_comma_in_string
+    self.assert_error('imprimir buscar("N,at", ",", "x")\n', "Demasiados argumentos.")
+  File "/workspace/scratch/a51f98983aed/nat/tests/test_nat.py", line 37, in assert_error
+    self.assertIn(expected, result.stderr)
+AssertionError: 'Demasiados argumentos.' not found in "nat.c:575:13: runtime error: index 2 out of bounds for type 'char [2][512]'\n"
+
+======================================================================
+FAIL: test_third_identifier_argument (__main__.ArgumentLimitTests.test_third_identifier_argument)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/a51f98983aed/nat/tests/test_nat.py", line 175, in test_third_identifier_argument
+    self.assert_error('imprimir caracter("Nat", 1, extra)\n', "Demasiados argumentos.")
+  File "/workspace/scratch/a51f98983aed/nat/tests/test_nat.py", line 37, in assert_error
+    self.assertIn(expected, result.stderr)
+AssertionError: 'Demasiados argumentos.' not found in "nat.c:575:13: runtime error: index 2 out of bounds for type 'char [2][512]'\n"
+
+======================================================================
+FAIL: test_third_literal_argument (__main__.ArgumentLimitTests.test_third_literal_argument)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/a51f98983aed/nat/tests/test_nat.py", line 172, in test_third_literal_argument
+    self.assert_error('imprimir buscar("Nat", "a", "extra")\n', "Demasiados argumentos.")
+  File "/workspace/scratch/a51f98983aed/nat/tests/test_nat.py", line 37, in assert_error
+    self.assertIn(expected, result.stderr)
+AssertionError: 'Demasiados argumentos.' not found in "nat.c:575:13: runtime error: index 2 out of bounds for type 'char [2][512]'\n"
+
+======================================================================
+FAIL: test_third_nested_argument (__main__.ArgumentLimitTests.test_third_nested_argument)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/a51f98983aed/nat/tests/test_nat.py", line 178, in test_third_nested_argument
+    self.assert_error('imprimir buscar("Nat", "a", longitud("Nat"))\n',
+  File "/workspace/scratch/a51f98983aed/nat/tests/test_nat.py", line 37, in assert_error
+    self.assertIn(expected, result.stderr)
+AssertionError: 'Demasiados argumentos.' not found in "nat.c:575:13: runtime error: index 2 out of bounds for type 'char [2][512]'\n"
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.043s
+
+FAILED (failures=7)

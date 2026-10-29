@@ -1,0 +1,178 @@
+{
+  "label": "github-0ef1d607-baseline",
+  "date_utc": "2026-10-29T15:49:25.491132+00:00",
+  "source_sha256": "93858ef71b3b09ca133fb497b4fa428952825d368c0b14e9ca44db0caf25894f",
+  "environment": {
+    "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+    "machine": "x86_64",
+    "cpu": "AMD EPYC 9V74 80-Core Processor",
+    "logical_cpus": 9
+  },
+  "method": {
+    "workload": "digit_walk",
+    "transitions": 6561,
+    "repetitions": 9,
+    "warmups": 2,
+    "clock": "perf_counter_ns",
+    "includes_process_startup": true,
+    "schedule": "shuffled interleaved rounds; seed=0",
+    "limitations": [
+      "One small byte/string microbenchmark only",
+      "Compiler may optimize code while preserving its observable output",
+      "C/C++ use one-byte scalar states; Python/Nat use strings",
+      "Rust integer parsing differs internally from C strtol",
+      "No CPU pinning, frequency control or isolated host",
+      "No performance ranking or memory-safety conclusion follows"
+    ]
+  },
+  "sources_sha256": {
+    "digit_walk.c": "a30d7cf84887a30010686b7731aff861dfada029b40977e19fbb0c1c444406c7",
+    "digit_walk.nat": "781ce31274fdbb76ec3790691a9c4d21ed171f5b42268ea46fe3a97b4f184ace",
+    "digit_walk.py": "8dfa703625537c24e285e559bb75a06fc95fff6e85183b6f38ef699601d7e0c0",
+    "digit_walk.rs": "e16112d82bf9f34cecc3b56cb7fd5b88dc0d9910a84dc6f4d1c7e7154e10a609"
+  },
+  "implementations": {
+    "Nat": {
+      "status": "measured",
+      "version": "gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+      "compile_command": [
+        "/usr/bin/gcc",
+        "-std=c11",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "/workspace/scratch/a51f98983aed/nat-original/nat.c",
+        "-o",
+        "/tmp/nat-benchmark-8s5mzdxm/nat"
+      ],
+      "compile_seconds": 0.251806514,
+      "compile_scope": "C interpreter build; Nat source is interpreted during execution",
+      "run_command": [
+        "/tmp/nat-benchmark-8s5mzdxm/nat",
+        "/workspace/scratch/a51f98983aed/nat/benchmarks/digit_walk.nat"
+      ],
+      "samples_seconds": [
+        0.0074657,
+        0.006874341,
+        0.008057831,
+        0.006982325,
+        0.007740299,
+        0.007543319,
+        0.008018469,
+        0.007542273,
+        0.008445702
+      ],
+      "median_seconds": 0.007543319,
+      "mean_seconds": 0.007630028777777778,
+      "stdev_seconds": 0.0005054936554336704,
+      "min_seconds": 0.006874341,
+      "max_seconds": 0.008445702,
+      "verified_stdout": "1\n"
+    },
+    "C": {
+      "status": "measured",
+      "version": "gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+      "compile_command": [
+        "/usr/bin/gcc",
+        "-std=c11",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "/workspace/scratch/a51f98983aed/nat/benchmarks/digit_walk.c",
+        "-o",
+        "/tmp/nat-benchmark-8s5mzdxm/walk-c"
+      ],
+      "compile_seconds": 0.054948042,
+      "run_command": [
+        "/tmp/nat-benchmark-8s5mzdxm/walk-c"
+      ],
+      "samples_seconds": [
+        0.001215408,
+        0.001274254,
+        0.000722073,
+        0.00156056,
+        0.001632581,
+        0.001338699,
+        0.001066233,
+        0.00144476,
+        0.001326521
+      ],
+      "median_seconds": 0.001326521,
+      "mean_seconds": 0.0012867876666666667,
+      "stdev_seconds": 0.00027307331150077627,
+      "min_seconds": 0.000722073,
+      "max_seconds": 0.001632581,
+      "verified_stdout": "1\n"
+    },
+    "C++": {
+      "status": "measured",
+      "version": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+      "compile_command": [
+        "/usr/bin/g++",
+        "-x",
+        "c++",
+        "-std=c++17",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "/workspace/scratch/a51f98983aed/nat/benchmarks/digit_walk.c",
+        "-o",
+        "/tmp/nat-benchmark-8s5mzdxm/walk-cpp"
+      ],
+      "compile_seconds": 0.11819159,
+      "run_command": [
+        "/tmp/nat-benchmark-8s5mzdxm/walk-cpp"
+      ],
+      "samples_seconds": [
+        0.001253023,
+        0.001370576,
+        0.001111149,
+        0.001689155,
+        0.001213685,
+        0.001544221,
+        0.001457764,
+        0.001070344,
+        0.001514287
+      ],
+      "median_seconds": 0.001370576,
+      "mean_seconds": 0.001358244888888889,
+      "stdev_seconds": 0.00021047754430784558,
+      "min_seconds": 0.001070344,
+      "max_seconds": 0.001689155,
+      "verified_stdout": "1\n"
+    },
+    "Rust": {
+      "status": "unavailable"
+    },
+    "Python": {
+      "status": "measured",
+      "version": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+      "compile_seconds": null,
+      "compile_scope": "source compilation is included in process execution",
+      "run_command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/scratch/a51f98983aed/nat/benchmarks/digit_walk.py"
+      ],
+      "samples_seconds": [
+        0.01690316,
+        0.014214697,
+        0.015963605,
+        0.014561697,
+        0.017181325,
+        0.017735684,
+        0.018197695,
+        0.017600797,
+        0.017315528
+      ],
+      "median_seconds": 0.017181325,
+      "mean_seconds": 0.016630465333333334,
+      "stdev_seconds": 0.001415398444119447,
+      "min_seconds": 0.014214697,
+      "max_seconds": 0.018197695,
+      "verified_stdout": "1\n"
+    }
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "original_files": {
+    ".gitattributes": {
+      "original_blob": "dfe0770424b2a19faf507a501ebfc23be8f54e7b",
+      "unchanged": true
+    },
+    "bucle_v01.nat": {
+      "original_blob": "67b89d4f5596da8260fdee0c44a8ede290fe8381",
+      "unchanged": true
+    },
+    "holamundo.nat": {
+      "original_blob": "b78c2d80f86104bf6014d4c0a33e33c737a69884",
+      "unchanged": true
+    },
+    "interprete.nat": {
+      "original_blob": "f6943b7dc96234eeac01e6e1b9d71c3cc22f0788",
+      "unchanged": true
+    },
+    "interprete_v01.nat": {
+      "original_blob": "5603042cf5a1836428f1aeb435b297fe0c0b985b",
+      "unchanged": true
+    },
+    "nat.c": {
+      "original_blob": "4be2b0b043d6e11b5fde15e3b2d0491969706026",
+      "unchanged": false
+    },
+    "nat.nat": {
+      "original_blob": "d84efd88f7f91d15c595138c1c2664236c4cd302",
+      "unchanged": true
+    },
+    "nat_v01.c": {
+      "original_blob": "b3a79ba33db7c44473cf2184ae1ddaf1270eb9e8",
+      "unchanged": true
+    },
+    "pruebas/bucle.nat": {
+      "original_blob": "8d46226d642f8ec112ffb443926e662723226cb7",
+      "unchanged": true
+    },
+    "pruebas/cadenas.nat": {
+      "original_blob": "1b700ba16b1021ac3306f7c89132fd4ca0aff0e6",
+      "unchanged": true
+    },
+    "pruebas/interprete.nat": {
+      "original_blob": "f6943b7dc96234eeac01e6e1b9d71c3cc22f0788",
+      "unchanged": true
+    },
+    "subprograma.nat": {
+      "original_blob": "efa50bbd3905ec6976e90ddb6a0f600c891ea5f6",
+      "unchanged": true
+    }
+  },
+  "test_logs": {
+    "baseline-tests.log": {
+      "tests": 33,
+      "result": "passed"
+    },
+    "tests.log": {
+      "tests": 41,
+      "result": "passed"
+    },
+    "sanitizers.log": {
+      "tests": 41,
+      "result": "passed"
+    },
+    "baseline-regressions.log": {
+      "tests": 8,
+      "failures": 7,
+      "result": "expected_failure_in_original"
+    }
+  },
+  "leak_detection": "Not validated: LeakSanitizer runtime cannot inspect /proc in this environment"
+}

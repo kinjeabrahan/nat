@@ -1,0 +1,16 @@
+# 9^4 = 6561 dependent byte transitions; print the final state to observe it.
+estado = "0"
+a = "0"
+mientras a != "9":
+    b = "0"
+    mientras b != "9":
+        c = "0"
+        mientras c != "9":
+            d = "0"
+            mientras d != "9":
+                estado = caracter("1234567890", estado)
+                d = caracter("1234567899", d)
+            c = caracter("1234567899", c)
+        b = caracter("1234567899", b)
+    a = caracter("1234567899", a)
+imprimir estado
